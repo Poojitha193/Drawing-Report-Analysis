@@ -16,15 +16,36 @@ const DrawingReportAnalysis = () => {
   const [sixMonthsAgo, setSixMonthsAgo] = useState('');
   const [beginningDate, setBeginningDate] = useState('');
   const [today, setToday] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [attempted, setAttempted] = useState(false);
 
+  const validateForm = () => {
+    let isValid = true;
   
+    if (!reportType.trim()) isValid = false;
+    if (!designConsultant) isValid = false;
+  
+    if (timePeriod === 'byDate') {
+      if (!fromDate || !toDate) isValid = false;
+      if (fromDate > toDate) isValid = false;
+    } else if (timePeriod === 'byMonth') {
+      if (!month) isValid = false;
+    }
+  
+    setIsFormValid(isValid);
+    return isValid;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (viewDownload === 'view') {
-      setShowView(true);
-    } else {
-      // Handle download logic here
+    setAttempted(true);
+    
+    if (validateForm()) {
+      if (viewDownload === 'view') {
+        setShowView(true);
+      } else {
+        // Handle download logic here
+      }
     }
   };
 
@@ -43,7 +64,7 @@ const DrawingReportAnalysis = () => {
   const downloadPDF = () => {
     const data = generateDownloadData();
     const doc = new jsPDF();
-    
+
     doc.text("Drawing Report Analysis", 10, 10);
     let yPos = 30;
     Object.entries(data).forEach(([key, value]) => {
@@ -52,10 +73,10 @@ const DrawingReportAnalysis = () => {
         yPos += 10;
       }
     });
-    
+
     doc.save("drawing_report_analysis.pdf");
   };
-  
+
   const downloadExcel = () => {
     const data = generateDownloadData();
     const ws = XLSX.utils.json_to_sheet([data]);
@@ -63,17 +84,17 @@ const DrawingReportAnalysis = () => {
     XLSX.utils.book_append_sheet(wb, ws, "Report");
     XLSX.writeFile(wb, "drawing_report_analysis.xlsx");
   };
-  
+
   const downloadCSV = () => {
     const data = generateDownloadData();
     let csvContent = "data:text/csv;charset=utf-8,";
-    
+
     // Add headers
     csvContent += Object.keys(data).join(",") + "\n";
-    
+
     // Add values
     csvContent += Object.values(data).join(",");
-    
+
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -96,7 +117,7 @@ const DrawingReportAnalysis = () => {
     setBeginningDate(formatDate(twoYearsAgo));
   }, []);
 
-  const formatDate = (date) => {
+    const formatDate = (date) => {
     return date.toISOString().split('T')[0];
   };
 
@@ -130,30 +151,32 @@ const DrawingReportAnalysis = () => {
       <h1 className="text-2xl font-bold mb-6">Drawing Report Analysis</h1>
       <form onSubmit={handleSubmit} className="space-y-6 mx-24 my-10">
         <div className="flex items-center justify-between gap-24">
-        <div className='grid grid-cols-3 w-full items-center'>
-          <label className="block mb-2 col-span-1">Report Type:</label>
-          <input
-            type="text"
-            value={reportType}
-            placeholder='Select date'
-            onChange={(e) => setReportType(e.target.value)}
-            className="w-full p-2 border rounded col-span-2 bg-gray-200"
-          />
-        </div>
- 
-        <div className='grid grid-cols-3 w-full items-center'>
-          <label className="block mb-2 col-span-1">Design Consultant:</label>
-          <select
-            value={designConsultant}
-            onChange={(e) => setDesignConsultant(e.target.value)}
-            className="w-full p-2 border rounded col-span-2 bg-gray-200"
-          >
-            <option value="">Select consultant</option>
-            <option value="consultant1">Consultant 1</option>
-            <option value="consultant2">Consultant 2</option>
-            <option value="consultant3">Consultant 3</option>
-          </select>
-        </div>
+          <div className='grid grid-cols-3 w-full items-center'>
+            <label className="block mb-2 col-span-1">Report Type:</label>
+            <input
+              type="text"
+              value={reportType}
+              placeholder='Select date'
+              onChange={(e) => setReportType(e.target.value)}
+              className="w-full p-2 border rounded col-span-2 bg-gray-200"
+            />
+            {attempted && !reportType.trim() && <p className="text-red-500">Report Type is required</p>}
+          </div>
+
+          <div className='grid grid-cols-3 w-full items-center'>
+            <label className="block mb-2 col-span-1">Design Consultant:</label>
+            <select
+              value={designConsultant}
+              onChange={(e) => setDesignConsultant(e.target.value)}
+              className="w-full p-2 border rounded col-span-2 bg-gray-200"
+            >
+              <option value="">Select consultant</option>
+              <option value="consultant1">Consultant 1</option>
+              <option value="consultant2">Consultant 2</option>
+              <option value="consultant3">Consultant 3</option>
+            </select>
+            {attempted && !designConsultant && <p className="text-red-500 col-span-2 col-start-2">Design Consultant is required</p>}
+          </div>
         </div>
 
         <div>
@@ -203,9 +226,9 @@ const DrawingReportAnalysis = () => {
         </div>
 
         {timePeriod === 'byDate' && (
-          
+
           <div className="flex items-center justify-between gap-6">
-            <div  className='grid grid-cols-3 w-full items-center '>
+            <div className='grid grid-cols-3 w-full items-center '>
               <label className="block mb-2 col-span-1">From:</label>
               <input
                 type="date"
@@ -223,8 +246,10 @@ const DrawingReportAnalysis = () => {
                 className="w-full p-2 border rounded col-span-2 bg-gray-200"
               />
             </div>
+            {attempted && (!fromDate || !toDate) && <p className="text-red-500">Both From and To dates are required</p>}
+            {attempted && fromDate > toDate && <p className="text-red-500">From date cannot be after To date</p>}
           </div>
-    
+
         )}
 
         {timePeriod === 'byMonth' && (
@@ -238,6 +263,7 @@ const DrawingReportAnalysis = () => {
                 className="w-full p-2 border rounded bg-gray-200"
               />
             </div>
+            {attempted && !month && <p className="text-red-500">Month is required</p>}
           </div>
         )}
 
@@ -275,22 +301,22 @@ const DrawingReportAnalysis = () => {
 
         {viewDownload === 'download' && (
           <div className="space-x-4 flex items-center justify-between">
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="px-4 py-2   rounded flex items-center"
               onClick={downloadPDF}
             >
               <FaFilePdf className="mr-2  m-1 text-red-500" /> Download in PDF format
             </button>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="px-4 py-2  rounded flex items-center"
               onClick={downloadExcel}
             >
               <FaFileExcel className="mr-2 text-green-400" /> Download in MS Excel format
             </button>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="px-4 py-2  rounded flex items-center"
               onClick={downloadCSV}
             >
@@ -300,7 +326,7 @@ const DrawingReportAnalysis = () => {
         )}
 
         <div className="space-x-4 items-center justify-center flex">
-          <button type="submit" className="px-6 py-2 bg-orange-500 text-white rounded">GO</button>
+        <button type="submit" className="px-6 py-2 bg-orange-500 text-white rounded">GO</button>
           <button type="button" onClick={handleReset} className="px-6 py-2 bg-orange-500 text-white rounded">RESET</button>
         </div>
       </form>
