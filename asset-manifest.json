@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/Drawing-Report-Analysis/static/css/main.a05144c8.css",
-    "main.js": "/Drawing-Report-Analysis/static/js/main.11582a2e.js",
+    "main.css": "/Drawing-Report-Analysis/static/css/main.9a588195.css",
+    "main.js": "/Drawing-Report-Analysis/static/js/main.a89d372e.js",
     "static/js/239.3d61cb17.chunk.js": "/Drawing-Report-Analysis/static/js/239.3d61cb17.chunk.js",
     "static/js/213.ab52a40c.chunk.js": "/Drawing-Report-Analysis/static/js/213.ab52a40c.chunk.js",
     "static/js/732.1ef5f037.chunk.js": "/Drawing-Report-Analysis/static/js/732.1ef5f037.chunk.js",
     "static/js/453.8f0dacc4.chunk.js": "/Drawing-Report-Analysis/static/js/453.8f0dacc4.chunk.js",
     "index.html": "/Drawing-Report-Analysis/index.html",
-    "main.a05144c8.css.map": "/Drawing-Report-Analysis/static/css/main.a05144c8.css.map",
-    "main.11582a2e.js.map": "/Drawing-Report-Analysis/static/js/main.11582a2e.js.map",
+    "main.9a588195.css.map": "/Drawing-Report-Analysis/static/css/main.9a588195.css.map",
+    "main.a89d372e.js.map": "/Drawing-Report-Analysis/static/js/main.a89d372e.js.map",
     "239.3d61cb17.chunk.js.map": "/Drawing-Report-Analysis/static/js/239.3d61cb17.chunk.js.map",
     "213.ab52a40c.chunk.js.map": "/Drawing-Report-Analysis/static/js/213.ab52a40c.chunk.js.map",
     "732.1ef5f037.chunk.js.map": "/Drawing-Report-Analysis/static/js/732.1ef5f037.chunk.js.map",
     "453.8f0dacc4.chunk.js.map": "/Drawing-Report-Analysis/static/js/453.8f0dacc4.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a05144c8.css",
-    "static/js/main.11582a2e.js"
+    "static/css/main.9a588195.css",
+    "static/js/main.a89d372e.js"
   ]
 }
